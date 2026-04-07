@@ -12,8 +12,8 @@ const setCookiesInBrowser = (data: ISetCookie) => {
 
   setCookie(c, typeOfToken, token, {
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
-    secure: process.env.NODE_ENV !== "Development",
+    sameSite: Bun.env.NODE_ENV === "Development" ? "lax" : "none",
+    secure: Bun.env.NODE_ENV !== "Development",
     maxAge: typeOfToken === "accessToken" ?
       60 * 60 : // 1 hr
       60 * 60 * 24 * 7 // 7 days

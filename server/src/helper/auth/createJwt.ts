@@ -19,8 +19,8 @@ const createJwt = async (data: ICreateJwt) => {
     userId: userId,
     exp: typeOfToken === "accessToken" ? getExp("1h") : getExp("7d")
   }, typeOfToken === "accessToken" ?
-    process.env.JWT_ACCESS_SECRET as string :
-    process.env.JWT_REFRESH_TOKEN as string
+    Bun.env.JWT_ACCESS_SECRET as string :
+    Bun.env.JWT_REFRESH_SECRET as string
   );
 
   return token;

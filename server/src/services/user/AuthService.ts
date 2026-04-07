@@ -1,3 +1,4 @@
+import { createJwt } from "@/helper/auth/createJwt";
 import { validateInputWithZod } from "@/helper/validation/validateInput";
 import UserModel from "@/models/user/UserModel";
 import {
@@ -5,8 +6,7 @@ import {
   IAuthLoginInput, IAuthRefreshInput, IAuthRegisterInput
 } from "@/validations/user/AuthZod";
 import { HTTPException } from "hono/http-exception";
-import { sign, verify } from "hono/jwt";
-import { createJwt } from "@/helper/auth/createJwt";
+import { verify } from "hono/jwt";
 
 const register = async (data: IAuthRegisterInput) => {
   const { displayname, email, password } = await validateInputWithZod(AuthRegisterZodSchema, data); // reassign parsed values to them
@@ -44,12 +44,12 @@ const refresh = async (data: IAuthRefreshInput) => {
   if (!refreshToken) throw new HTTPException(401, { message: "Unauthorized: Refresh token not available" });
 
   try {
-    const payload = await verify(refreshToken, process.env.JWT_REFRESH_SECRET as string, "HS256") as { userId: string; };
+    const payload = await verify(refreshToken, Bun.env.JWT_REFRESH_SECRET as string, "HS256") as { userId: string; };
 
     const newAccessToken = await createJwt({ userId: payload.userId, typeOfToken: "accessToken" });
     const newRefreshToken = await createJwt({ userId: payload.userId, typeOfToken: "refreshToken" });
 
-    return { message: "Successfully logged in user", accessToken: newAccessToken, refreshToken: newRefreshToken };
+    return { message: "Successfully refreshed token", accessToken: newAccessToken, refreshToken: newRefreshToken };
   } catch (err) {
     throw new HTTPException(401, { message: "Unauthorized: Invalid or Expired token" });
   }
