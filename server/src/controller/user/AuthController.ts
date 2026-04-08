@@ -1,8 +1,8 @@
 import { setCookiesInBrowser } from "@/helper/auth/setCookie";
 import { login, refresh, register } from "@/services/user/AuthService";
-import { IAuthLoginInput, IAuthRefreshInput, IAuthRegisterInput } from "@/validations/user/AuthZod";
+import { IAuthLoginInput, IAuthRegisterInput } from "@/validations/user/AuthZod";
 import { Hono } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
+import { getCookie } from "hono/cookie";
 
 const authApp = new Hono();
 
